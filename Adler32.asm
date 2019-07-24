@@ -1,10 +1,10 @@
 .data 0x10010000
-	str0: .asciiz "*****Calcolatore di Checksum (Codifica Adler32)*****\nInserisci una stringa di testo:\n"
+	str0: .asciiz "*****Calcolatore di Checksum (Codifica Adler32)*****\nInserire una stringa di testo:\n"
 	str1: .asciiz "Il valore di Checksum di questa stringa è: "
-	str2: .asciiz "Nessun input"
+	str2: .asciiz "Errore: nessun input"
 	
 .data 0x10010100
-	char: .space 1000000	#Alloca uno spazio in memoria RAM per accogliere i caratteri
+	char: .space 1000000	#Alloca 1 Megabyte di spazio in memoria RAM per accogliere i caratteri
 		
 .text
 __start:
