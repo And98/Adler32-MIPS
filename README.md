@@ -3,7 +3,7 @@ Implementazione dell'algoritmo Adler-32 in Assembly MIPS realizzata da @And98 e 
 
 # L'algoritmo Adler-32
 ## Introduzione
-L'Adler-32 è un algoritmo per il calcolo del *checksum* (o somma di controllo) sviluppato da Mark Adler nel 1995. [Qui](https://en.wikipedia.org/wiki/Adler-32) si possono trovare maggiori informazioni.
+L'Adler-32 è un algoritmo per il calcolo del *checksum* (o somma di controllo) a 32 bit sviluppato da Mark Adler nel 1995. [Qui](https://en.wikipedia.org/wiki/Adler-32) si possono trovare maggiori informazioni.
 ## Algoritmo
 Come si può leggere [qui](https://software.intel.com/en-us/articles/fast-computation-of-adler32-checksums) ci sono metodi di implementazione differenti per il momento in cui viene eseguito l'operatore modulo della divisione. I principali sono il calcolo del modulo ad ogni iterazione (opzione più lenta e meno efficiente, ma più sicura) oppure una volta calcolate le somme finali (metodo migliore per le prestazioni, ma vulnerabile a problemi in caso una delle due somme diventi troppo grande in modulo). <br/><br/>
 La nostra è un'implementazione ibrida, come si potrà evincere poco più in basso nel paragrafo chiamato **Funzionamento**.<br/>
