@@ -24,7 +24,7 @@ __start:
 	li $s2, 0 		#inizializza SommaB in $s2 con il valore 0
 	
 	li $s6, 65521		#65521 è il maggiore numero primo contenuto in 16 bit, serve per il calcolo del resto 
-	lui $s7, 0x7000		#evita che si verifichi il problema del riporto forzando il calcolo del resto per somme grandi	
+	li $s7, 0xffffffff	#evita che si verifichi il problema del riporto forzando il calcolo del resto per somme grandi	
 
 loop: 
 ###Carica un carattere della stringa letta alla volta, valuta se la stringa è conclusa, calcola le somme, se SommaB supera $s7 ne calcola il resto 
@@ -33,17 +33,20 @@ loop:
 	
 	beq $t0, 0xa, finish	#se il valore di $t0 corrisponde a 'Invio' in ascii salta a finish
 	beq $t0, $zero, finish	#se il valore di $t0 corrisponde a 'null' in ascii salta a finish
-	addu $s1, $s1, $t0	#SommaA = SommaA + carattere ascii
-	addu $s2, $s2, $s1	#SommaB = SommaB + SommaA
 	
-	slt $t1, $s2, $s7	#controlla se SommaB raggiunge $s7
-	bne $t1, $zero, skip	#se SLT ha restituito 1 non calcola il resto
-
+	addu $s1, $s1, $t0	#SommaA = SommaA + carattere ascii
+		
+	subu $t1, $s7, $s2	#al massimo numero rappresentabile viene sottratta la SommaB precedente
+	sltu $t2, $s1, $t1	#viene verificato che SommaA sia minore del risultato della sottrazione
+	bne $t2, $zero, skip	#se ciò non è vero, si verificherebbe problema di riporto nel calcolare la nuova SommaB e si utilizza la funzione resto
+	
 	move $a0, $s2		#passa SommaB come parametro alla procedura rest_calc
 	jal rest_calc		#chiamata a procedura rest_calc
 	move $s2, $v0		#sovrascrive SommaB col resto dato da rest_calc
 	
-skip:	addi $s0, $s0, 1	#incrementa di 1 byte l'indirizzo contenuto in $s0, passando al carattere successivo
+skip:	addu $s2, $s2, $s1	#SommaB = SommaB + SommaA
+	
+	addi $s0, $s0, 1	#incrementa di 1 byte l'indirizzo contenuto in $s0, passando al carattere successivo
 	j loop			#ritorna al ciclo
 		
 finish:
@@ -68,6 +71,7 @@ finish:
 	li $v0, 34		#il codice chiamata 34 corrisponde alla scrittura a schermo di un numero binario in esadecimale
 	move $a0, $s3
 	syscall	
+	
 	j exit	
 	
 noinput:li $v0, 4		#etichetta che segnala il mancato inserimento di caratteri
